@@ -121,3 +121,4 @@ class Step(BaseObject):
         elif isinstance(other, list):
             step_list = StepList(other)
             return step_list.next(self)
+        raise Exception("Invalid step")
