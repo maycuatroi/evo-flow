@@ -24,7 +24,7 @@ def get_file_type(file_path):
     """
     Trả về file type của file_path
     """
-    file_type = file_path.split('.')[-1].lower()
+    file_type = file_path.split(".")[-1].lower()
     return file_type
 
 

@@ -6,23 +6,25 @@ import time
 
 import coloredlogs
 
-pathlib.Path('logs').mkdir(parents=True, exist_ok=True)
+pathlib.Path("logs").mkdir(parents=True, exist_ok=True)
 logger = logging.getLogger()
-current_time_string = time.strftime('%Y%m%d-%H%M%S')
-FILE_NAME = 'logs/evoflow.log'
-fh = logging.FileHandler(filename=FILE_NAME, mode='a', encoding='utf-8')
+current_time_string = time.strftime("%Y%m%d-%H%M%S")
+FILE_NAME = "logs/evoflow.log"
+fh = logging.FileHandler(filename=FILE_NAME, mode="a", encoding="utf-8")
 fh.setLevel(logging.ERROR)
-formatter = coloredlogs.ColoredFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = coloredlogs.ColoredFormatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
 coloredlogs.install(level=logging.INFO, logger=logger)
 
 
 def pretty_dict(dict_object, indent=0):
-    pretty_string = '\n'
+    pretty_string = "\n"
     for key, value in dict_object.items():
-        pretty_string += '\t' * indent + str(key) + ' : '
-        pretty_string += '\t' * (indent + 1) + str(value) + '\n'
+        pretty_string += "\t" * indent + str(key) + " : "
+        pretty_string += "\t" * (indent + 1) + str(value) + "\n"
     return pretty_string
 
 
@@ -35,7 +37,7 @@ def get_os_information():
     uname: %s
     version: %s
     """ % (
-        sys.version.split('\n'),
+        sys.version.split("\n"),
         str(platform.win32_edition()),
         platform.system(),
         platform.machine(),

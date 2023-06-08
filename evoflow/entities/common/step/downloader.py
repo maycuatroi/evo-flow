@@ -53,8 +53,12 @@ def download_urls(urls: list = None, download_dir: str = "Downloads") -> object:
         try:
             res = requests.get(url)
             filename = "zasdvadf"
-            with TqdmDownload(unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=filename) as t:
-                download_path, result = urlretrieve(url, f"{download_dir}/miniconda.exe")
+            with TqdmDownload(
+                unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=filename
+            ) as t:
+                download_path, result = urlretrieve(
+                    url, f"{download_dir}/miniconda.exe"
+                )
                 download_paths.append(download_path)
 
         except:
@@ -79,7 +83,9 @@ def download_urls(urls: list = None, download_dir: str = None) -> object:
     for i, url in tqdm(enumerate(urls), total=len(urls)):
         try:
             res = requests.get(url)
-            with TqdmDownload(unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=url) as t:
+            with TqdmDownload(
+                unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=url
+            ) as t:
                 download_path, result = urlretrieve(url)
                 file_name = os.path.split(download_path)[1]
                 if download_dir:
@@ -88,7 +94,9 @@ def download_urls(urls: list = None, download_dir: str = None) -> object:
                 download_paths.append(download_path)
 
             df.loc[i] = [url, download_path]
-            df.to_csv(f"{download_dir}/downloader_log.csv", encoding="utf-8", index=False)
+            df.to_csv(
+                f"{download_dir}/downloader_log.csv", encoding="utf-8", index=False
+            )
         except Exception as e:
             logger.error(f"{e}")
 

@@ -1,4 +1,3 @@
-
 from evoflow.operators.base_operator import BaseOperator
 
 
@@ -16,18 +15,21 @@ class PythonOperator(BaseOperator):
     :param templates_exts: a list of file extensions to resolve templates
     :type templates_exts: list
     """
-    template_fields = ('templates_dict', 'op_args', 'op_kwargs')
+
+    template_fields = ("templates_dict", "op_args", "op_kwargs")
     template_ext = tuple()
-    ui_color = '#ffefeb'
+    ui_color = "#ffefeb"
 
     def __init__(
-            self,
-            python_callable,
-            op_args=None,
-            op_kwargs=None,
-            templates_dict=None,
-            templates_exts=None,
-            *args, **kwargs):
+        self,
+        python_callable,
+        op_args=None,
+        op_kwargs=None,
+        templates_dict=None,
+        templates_exts=None,
+        *args,
+        **kwargs
+    ):
         super().__init__(*args, **kwargs)
         self.python_callable = python_callable
         self.op_args = op_args or []
@@ -38,4 +40,3 @@ class PythonOperator(BaseOperator):
     def action(self, **kwargs):
         kwargs = {**kwargs, **self.op_kwargs}
         return self.python_callable(*self.op_args, **kwargs)
-

@@ -5,17 +5,17 @@ from evoflow import logger
 try:
     from pywinauto import Application as App
 except ImportError:
-    logger.debug("Can't import pywin32, try to install with:\nconda install pywin32\nOR\npip install pywin32==227")
+    logger.debug(
+        "Can't import pywin32, try to install with:\nconda install pywin32\nOR\npip install pywin32==227"
+    )
 
 from evoflow.controller.log_controller import logger
 
-DATA_PATH = 'data'
+DATA_PATH = "data"
 START_CATIA = True
 
 
-
-
-class Global():
+class Global:
     REMOTE_EXECUTE = False
     __caa = None
     custom_env = None
@@ -29,7 +29,7 @@ class Global():
     def caa(self):
         if Global.__caa is None:
             try:
-                logger.info('Opening CATIA Application ... ')
+                logger.info("Opening CATIA Application ... ")
                 if Global.custom_env is not None:
                     Global.__caa = start_catia(Global.custom_env)
                 else:

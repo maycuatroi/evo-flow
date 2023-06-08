@@ -20,4 +20,4 @@ class PdfFileOperator(FileOperator):
 
     @staticmethod
     def supported_file_types():
-        return ['pdf']
+        return ["pdf"]

@@ -24,7 +24,7 @@ def imread(path, flags: int = -1):
 
 
 def imwrite(path, mat):
-    image_type = path.split('.')[-1]
+    image_type = path.split(".")[-1]
     is_success, im_buf_arr = cv2.imencode(".{}".format(image_type), mat)
     im_buf_arr.tofile(path)
     return is_success
@@ -49,4 +49,4 @@ class ImageFileOperator(FileOperator):
 
     @staticmethod
     def supported_file_types():
-        return ['jpg', 'png', 'tiff', 'tif']
+        return ["jpg", "png", "tiff", "tif"]

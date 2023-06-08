@@ -11,18 +11,19 @@ class DataFrameFile(File):
 
     def save(self, file_path=None) -> bool:
         # pylint: disable=abstract-class-instantiated
-        writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
+        writer = pd.ExcelWriter(file_path, engine="xlsxwriter")
 
         # skip first row
-        self.data.to_excel(writer, sheet_name='Sheet1', startrow=1, header=False, index=False)
+        self.data.to_excel(
+            writer, sheet_name="Sheet1", startrow=1, header=False, index=False
+        )
         # pylint: disable=no-member
         workbook = writer.book
-        worksheet = writer.sheets['Sheet1']
+        worksheet = writer.sheets["Sheet1"]
         # Add a header format.
-        header_format = workbook.add_format({
-            'bold':     True,
-            'fg_color': '#03a5fc',
-            'border':   1})
+        header_format = workbook.add_format(
+            {"bold": True, "fg_color": "#03a5fc", "border": 1}
+        )
 
         for col_num, value in enumerate(self.data.columns.values):
             # write to second row

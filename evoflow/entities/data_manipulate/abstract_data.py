@@ -13,7 +13,7 @@ class AbstractData:
         print một đoạn mô tả về data object này
         :return:
         """
-        info = {'info': "Abstract data"}
+        info = {"info": "Abstract data"}
         return info
 
     def summary(self):

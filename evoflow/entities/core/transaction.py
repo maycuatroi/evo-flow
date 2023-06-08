@@ -16,7 +16,9 @@ class Transaction(BaseObject):
         if type(self.condition.condition_function) == str:
             if self.condition.condition_function == "always":
                 return True
-            return self.build_condition_from_string(self.condition.condition_function, self.__from_step__.params)
+            return self.build_condition_from_string(
+                self.condition.condition_function, self.__from_step__.params
+            )
         return bool(self.condition.condition_function(**kwargs))
 
     def build_condition_from_string(self, condition_function_string, params):
@@ -36,6 +38,11 @@ class Transaction(BaseObject):
         return result
 
     def to_dict(self):
-        data = {"id": self.id, "from": self.__from_step__.id, "to": self.to.id, "condition": self.condition}
+        data = {
+            "id": self.id,
+            "from": self.__from_step__.id,
+            "to": self.to.id,
+            "condition": self.condition,
+        }
 
         return data

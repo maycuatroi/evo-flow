@@ -1,9 +1,10 @@
 from evoflow import Step
 
+
 class BaseOperator(Step):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.task_id = kwargs.get('task_id', None)
+        self.task_id = kwargs.get("task_id", None)
         self.name = self.task_id
 
     def __str__(self):

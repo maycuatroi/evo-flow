@@ -8,8 +8,8 @@ class WorkFlow(BaseObject):
     def __info__(self, **kwargs) -> dict:
         current_job_index = self.jobs.index(self.current_job)
         info = {
-            'jobs': len(self.jobs),
-            'current job': f'{current_job_index} - {self.current_job.name}'
+            "jobs": len(self.jobs),
+            "current job": f"{current_job_index} - {self.current_job.name}",
         }
 
     def __init__(self, name, jobs: list = [], **kwargs):
@@ -19,8 +19,8 @@ class WorkFlow(BaseObject):
 
     def __dict__(self):
         data = {
-            'jobs': [job.__dict__() for job in self.jobs],
-            'current_job': self.current_job.name,
+            "jobs": [job.__dict__() for job in self.jobs],
+            "current_job": self.current_job.name,
         }
 
         return data

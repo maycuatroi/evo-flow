@@ -105,6 +105,7 @@ class Step(BaseObject):
     # support '>>' operator
     def __rshift__(self, other):
         from evoflow.entities.core.step_list import StepList
+
         # connect to other step
         if isinstance(other, Step) or isinstance(other, StepList):
             return self.next(other)
@@ -112,8 +113,8 @@ class Step(BaseObject):
             return self.next(StepList(other))
 
     def __lshift__(self, other):
-
         from evoflow.entities.core.step_list import StepList
+
         # connect to other step
         if isinstance(other, Step) or isinstance(other, StepList):
             return other.next(self)

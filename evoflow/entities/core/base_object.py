@@ -12,14 +12,14 @@ class BaseObject:
     """
 
     def __init__(self, name=None, **kwargs):
-        self.name = f'{self.__class__.__name__} {name}'
+        self.name = f"{self.__class__.__name__} {name}"
         self.id = uuid.uuid4().hex
         for key, value in kwargs.items():
             setattr(self, key, value)
 
     def summary(self, **kwargs):
         info = self.__info__(**kwargs)
-        info['name'] = self.name
+        info["name"] = self.name
         json_string = json.dumps(info, ensure_ascii=False, indent=2)
         return json_string
 
@@ -32,7 +32,7 @@ class BaseObject:
         @rtype: return object info to display or log
         @param kwargs:
         """
-        return {'name': self.name}
+        return {"name": self.name}
 
     def to_json(self):
         data = self.__dict__

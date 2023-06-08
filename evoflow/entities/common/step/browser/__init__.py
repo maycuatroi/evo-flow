@@ -17,7 +17,7 @@ def open_browser(url: str = None, proxy: Proxy = None) -> dict:
     """
     browser = webdriver.Firefox(proxy=proxy)
     browser.get(url)
-    return {'browser': browser}
+    return {"browser": browser}
 
 
 @evoflow.Step()
@@ -29,11 +29,13 @@ def setup_proxy(proxy_url: str = None):
     """
     proxy = None
     if proxy_url:
-        proxy = Proxy({
-            'proxyType': ProxyType.MANUAL,
-            'httpProxy': proxy_url,
-            'ftpProxy':  proxy_url,
-            'sslProxy':  proxy_url,
-            'noProxy':   ''  # set this value as desired
-        })
-    return {'proxy': proxy}
+        proxy = Proxy(
+            {
+                "proxyType": ProxyType.MANUAL,
+                "httpProxy": proxy_url,
+                "ftpProxy": proxy_url,
+                "sslProxy": proxy_url,
+                "noProxy": "",  # set this value as desired
+            }
+        )
+    return {"proxy": proxy}

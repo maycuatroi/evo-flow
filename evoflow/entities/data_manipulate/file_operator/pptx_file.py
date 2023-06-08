@@ -25,35 +25,36 @@ class PPTXFile(File):
 
         properties = []
         for attribute in dir(self.data.core_properties):
-            if not attribute.startswith('_'):
+            if not attribute.startswith("_"):
                 properties.append(attribute)
 
-        properties_dict = {'slides': len(self.data.slides)}
+        properties_dict = {"slides": len(self.data.slides)}
         for property_name in properties:
-
             value = getattr(self.data.core_properties, property_name)
 
-            if value is not None \
-                    and value.__class__.__name__ in ['int', 'str', 'datetime'] \
-                    and len(str(value)) > 0:
+            if (
+                value is not None
+                and value.__class__.__name__ in ["int", "str", "datetime"]
+                and len(str(value)) > 0
+            ):
                 properties_dict[property_name] = str(value)
 
         return json.dumps(properties_dict, ensure_ascii=False, indent=2)
 
-    def extract_images(self, output_path='data'):
+    def extract_images(self, output_path="data"):
         index = 0
-        for picture in tqdm(iter_picture_shapes(self.data), desc='Extract Images'):
+        for picture in tqdm(iter_picture_shapes(self.data), desc="Extract Images"):
             image = picture.image
             # ---get image "file" contents---
             image_bytes = image.blob
             # ---make up a name for the file, e.g. 'image.jpg'---
 
-            image_dir = f'{output_path}/{self.data.core_properties.title}'
-            image_filename = f'{image_dir}/image_{index}.{image.ext}'
+            image_dir = f"{output_path}/{self.data.core_properties.title}"
+            image_filename = f"{image_dir}/image_{index}.{image.ext}"
 
             pathlib.Path(image_dir).mkdir(parents=True, exist_ok=True)
 
-            with open(image_filename, 'wb') as file:
+            with open(image_filename, "wb") as file:
                 file.write(image_bytes)
             index += 1
 

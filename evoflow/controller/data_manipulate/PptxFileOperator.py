@@ -18,4 +18,4 @@ class PptxFileOperator(FileOperator):
 
     @staticmethod
     def supported_file_types():
-        return ['ppt', 'pptx']
+        return ["ppt", "pptx"]

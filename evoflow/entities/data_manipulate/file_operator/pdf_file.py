@@ -20,17 +20,21 @@ def download_poppler():
     try:
         from pyunpack import Archive
     except ImportError:
-        logger.error("Can't import pyunpack. Try to install with:\npip install pyunpack")
+        logger.error(
+            "Can't import pyunpack. Try to install with:\npip install pyunpack"
+        )
 
     poppler_path = f"{os.getenv('userprofile')}/.evoflow/poppler"
     pathlib.Path(poppler_path).mkdir(parents=True, exist_ok=True)
-    poppler_file_name = evoflow.Params.POPPLER_URL.rsplit('/', maxsplit=-1)
+    poppler_file_name = evoflow.Params.POPPLER_URL.rsplit("/", maxsplit=-1)
     opener = urllib.request.URLopener()
-    opener.addheader('User-Agent', 'evoflow')
-    filename, _ = opener.retrieve(evoflow.Params.POPPLER_URL, f"{poppler_path}/{poppler_file_name}")
+    opener.addheader("User-Agent", "evoflow")
+    filename, _ = opener.retrieve(
+        evoflow.Params.POPPLER_URL, f"{poppler_path}/{poppler_file_name}"
+    )
     Archive(filename).extractall(poppler_path)
     os.remove(filename)
-    poppler_path = glob.glob(f'{poppler_path}/*/bin')[0]
+    poppler_path = glob.glob(f"{poppler_path}/*/bin")[0]
     return os.path.normpath(poppler_path)
 
 
@@ -52,30 +56,34 @@ class PdfFile(File):
         return json.dumps(self.data.metadata, ensure_ascii=False, indent=2)
 
     def to_images(self, dpi=500) -> Iterator[ImageFile]:
-
         try:
             # pylint: disable= import-outdide-toplevel
             from pdf2image import convert_from_path
         except ImportError as import_error:
-            raise ImportError("Can't import pdf2image. Try to install with: pip install pdf2image") from import_error
+            raise ImportError(
+                "Can't import pdf2image. Try to install with: pip install pdf2image"
+            ) from import_error
 
         poppler_paths = glob.glob(f"{os.getenv('userprofile')}/.evoflow/poppler/*/bin")
         if len(poppler_paths) == 0:
             try:
                 poppler_path = download_poppler()
             except ValueError as value_error:
-                if str(value_error) == 'patool not found! Please install patool!':
+                if str(value_error) == "patool not found! Please install patool!":
                     raise ValueError(
-                        'patool not found! Please install patool!. \n'
-                        'Try to install with: pip install patool') from value_error
+                        "patool not found! Please install patool!. \n"
+                        "Try to install with: pip install patool"
+                    ) from value_error
         else:
             poppler_path = poppler_paths[0]
 
         pages = convert_from_path(self.file_path, dpi, poppler_path=poppler_path)
         images = []
-        for i, page in tqdm(enumerate(pages),
-                            total=len(pages),
-                            desc=f'Extract image from file: {self.file_path}'):
+        for i, page in tqdm(
+            enumerate(pages),
+            total=len(pages),
+            desc=f"Extract image from file: {self.file_path}",
+        ):
             image_path = f"{self.file_path}_page_{i}.png"
             page.save(image_path)
             image = ImageFileOperator().read(image_path)

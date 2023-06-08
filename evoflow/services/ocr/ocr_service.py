@@ -24,7 +24,6 @@ class OCRService(AbstractService):
         pass
 
     def run(self, data: File, **args):
-
         image = get_image(data)
         result = self.ocr(image, **args)
         return result

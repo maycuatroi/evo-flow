@@ -15,5 +15,5 @@ class Condition(BaseObject):
         if type(self.condition_function) != str:
             args = inspect.getfullargspec(self.condition_function).args
             z = inspect.getsource(self.condition_function)
-            return {'condition_function': {'args': args, 'source': z}}
+            return {"condition_function": {"args": args, "source": z}}
         return self.__dict__

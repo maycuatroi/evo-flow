@@ -8,7 +8,6 @@ from evoflow.Entities.DataManipulate.FileOperator.File import File
 
 
 class ExcelFileOperator(FileOperator):
-
     def read(self, file_path, **args) -> File:
         """
         read file excel
@@ -33,4 +32,4 @@ class ExcelFileOperator(FileOperator):
 
     @staticmethod
     def supported_file_types():
-        return ['xlsx', 'csv', 'xls']
+        return ["xlsx", "csv", "xls"]

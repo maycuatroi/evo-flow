@@ -15,13 +15,10 @@ class EmptyOperator(BaseOperator):
     :param templates_exts: a list of file extensions to resolve templates
     :type templates_exts: list
     """
-    template_fields = ('templates_dict', 'op_args', 'op_kwargs')
+
+    template_fields = ("templates_dict", "op_args", "op_kwargs")
     template_ext = tuple()
-    ui_color = '#ffefeb'
+    ui_color = "#ffefeb"
 
-    def __init__(
-            self,
-
-            *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        

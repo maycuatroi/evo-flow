@@ -51,6 +51,8 @@ class StepList(Step):
         with ThreadPoolExecutor(max_workers=10) as executor:
             list(
                 tqdm(
-                    executor.map(lambda step: step.action(**kwargs), self.steps), total=len(self.steps), desc=self.name
+                    executor.map(lambda step: step.action(**kwargs), self.steps),
+                    total=len(self.steps),
+                    desc=self.name,
                 )
             )

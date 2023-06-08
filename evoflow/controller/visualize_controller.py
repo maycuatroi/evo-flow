@@ -2,7 +2,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 
-def draw_boxes(image, bounds, color='yellow', width=2):
+def draw_boxes(image, bounds, color="yellow", width=2):
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype("data/HachiMaruPop-Regular.ttf", 32)
     for bound in bounds:
