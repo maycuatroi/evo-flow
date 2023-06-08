@@ -30,7 +30,7 @@ def read_requirements(path):
 
 
 setup(
-    name="evoflow",
+    name="evo-flow",
     version=read("evoflow", "VERSION"),
     description="Awesome evoflow created by maycuatroi",
     url="https://github.com/maycuatroi/evo-flow/",
