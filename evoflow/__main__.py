@@ -1,4 +1,4 @@
-"""Entry point for evo_flow."""
+"""Entry point for evoflow."""
 
 from .cli import main  # pragma: no cover
 

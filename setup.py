@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 
 def read(*paths, **kwargs):
     """Read the contents of a text file safely.
-    >>> read("evo_flow", "VERSION")
+    >>> read("evoflow", "VERSION")
     '0.1.0'
     >>> read("README.md")
     ...
@@ -30,9 +30,9 @@ def read_requirements(path):
 
 
 setup(
-    name="evo_flow",
-    version=read("evo_flow", "VERSION"),
-    description="Awesome evo_flow created by maycuatroi",
+    name="evoflow",
+    version=read("evoflow", "VERSION"),
+    description="Awesome evoflow created by maycuatroi",
     url="https://github.com/maycuatroi/evo-flow/",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
@@ -40,7 +40,7 @@ setup(
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
     entry_points={
-        "console_scripts": ["evo_flow = evo_flow.__main__:main"]
+        "console_scripts": ["evoflow = evoflow.__main__:main"]
     },
     extras_require={"test": read_requirements("requirements-test.txt")},
 )

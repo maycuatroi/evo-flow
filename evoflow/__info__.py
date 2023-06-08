@@ -1,0 +1,5 @@
+__author__ = "evoflow"
+__maintainer__ = "Nguyen Anh binh"
+__email__ = "sometimesocrazy@gmail.com"
+__status__ = "developing"
+__website__ = "https://github.com/maycuatroi/evo-flow/"

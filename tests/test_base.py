@@ -1,5 +1,5 @@
-from evo_flow.base import NAME
+from evoflow.base import NAME
 
 
 def test_base():
-    assert NAME == "evo_flow"
+    assert NAME == "evoflow"

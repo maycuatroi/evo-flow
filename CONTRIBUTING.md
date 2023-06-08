@@ -1,6 +1,6 @@
 # How to develop on this project
 
-evo_flow welcomes contributions from the community.
+evoflow welcomes contributions from the community.
 
 **You need PYTHON3!**
 

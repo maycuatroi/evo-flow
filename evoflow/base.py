@@ -1,7 +1,7 @@
 """
-evo_flow base module.
+ base module.
 
-This is the principal module of the evo_flow project.
+This is the principal module of the evoflow project.
 here you put your main classes and objects.
 
 Be creative! do whatever you want!
@@ -14,4 +14,4 @@ and then choose `flask` as template.
 """
 
 # example constant variable
-NAME = "evo_flow"
+NAME = "evoflow"

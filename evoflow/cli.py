@@ -1,4 +1,4 @@
-"""CLI interface for evo_flow project.
+"""CLI interface for evoflow project.
 
 Be creative! do whatever you want!
 
@@ -12,7 +12,7 @@ Be creative! do whatever you want!
 def main():  # pragma: no cover
     """
     The main function executes on commands:
-    `python -m evo_flow` and `$ evo_flow `.
+    `python -m evoflow` and `$ evoflow `.
 
     This is your program's entry point.
 
