@@ -33,12 +33,15 @@ class TqdmDownload(tqdm):
 
 
 @evoflow.Step()
-def download_urls(urls: list = None, download_dir: str = 'Downloads') -> object:
+def download_urls(urls: list = None, download_dir: str = "Downloads") -> object:
     """
-    @param urls: List of urls to download
-    @param download_dir: Download directory
-    @return: download_paths: List path to downloaded files
-    @rtype: dict
+
+    Args:
+        urls (list, optional): List of urls to download. Defaults to None.
+        download_dir (str, optional): Download directory. Defaults to 'Downloads'.
+        download_paths (list, optional): List path to downloaded files. Defaults to None.
+    Returns:
+        dict: download_paths: List path to downloaded files
 
     """
     download_paths = []
@@ -46,18 +49,18 @@ def download_urls(urls: list = None, download_dir: str = 'Downloads') -> object:
     progres_bar = tqdm(urls)
 
     for url in progres_bar:
-        progres_bar.set_description(f'Downloading: {url}')
+        progres_bar.set_description(f"Downloading: {url}")
         try:
             res = requests.get(url)
-            filename = 'zasdvadf'
-            with TqdmDownload(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=filename) as t:
-                download_path, result = urlretrieve(url, f'{download_dir}/miniconda.exe')
+            filename = "zasdvadf"
+            with TqdmDownload(unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=filename) as t:
+                download_path, result = urlretrieve(url, f"{download_dir}/miniconda.exe")
                 download_paths.append(download_path)
 
         except:
             logger.error(f"Can't access : {url}")
 
-    return {'download_paths': download_path}
+    return {"download_paths": download_path}
 
 
 @evoflow.Step()
@@ -70,23 +73,23 @@ def download_urls(urls: list = None, download_dir: str = None) -> object:
 
     """
     download_paths = []
-    df = pd.DataFrame(columns=['URL', 'FILE_NAME'])
+    df = pd.DataFrame(columns=["URL", "FILE_NAME"])
     if download_dir:
         pathlib.Path(download_dir).mkdir(parents=True, exist_ok=True)
     for i, url in tqdm(enumerate(urls), total=len(urls)):
         try:
             res = requests.get(url)
-            with TqdmDownload(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc=url) as t:
+            with TqdmDownload(unit="B", unit_scale=True, unit_divisor=1024, miniters=1, desc=url) as t:
                 download_path, result = urlretrieve(url)
                 file_name = os.path.split(download_path)[1]
                 if download_dir:
-                    shutil.move(download_path, f'{download_dir}/{file_name}')
-                    download_path = f'{download_dir}/{file_name}'
+                    shutil.move(download_path, f"{download_dir}/{file_name}")
+                    download_path = f"{download_dir}/{file_name}"
                 download_paths.append(download_path)
 
             df.loc[i] = [url, download_path]
-            df.to_csv(f'{download_dir}/downloader_log.csv', encoding='utf-8', index=False)
+            df.to_csv(f"{download_dir}/downloader_log.csv", encoding="utf-8", index=False)
         except Exception as e:
             logger.error(f"{e}")
 
-    return {'download_files': download_path}
+    return {"download_files": download_path}

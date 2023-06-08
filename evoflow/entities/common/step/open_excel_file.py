@@ -1,15 +1,16 @@
-from evoflow.Controller.DataManipulate.FileOperator import FileOperator
-from evoflow.Entities.Core.Step import Step
+from evoflow.controller.data_manipulate.file_operator import FileOperator
+from evoflow.entities.core.step import Step
 
 
 class OpenExcelFile(Step):
-
-    def __init__(self, file_path='', **kwargs):
+    def __init__(self, file_path=None, **kwargs):
         """
-        @param file_path:
-        @param kwargs: pandas params
+        Open excel file
+        Args:
+            file_path: path to excel file
+            **kwargs:
         """
-        super().__init__(name='Open excel file', **kwargs)
+        super().__init__(name="Open excel file", **kwargs)
         self.file_path = file_path
         self.kwars = kwargs
 
@@ -28,11 +29,4 @@ class OpenExcelFile(Step):
     def action(self, **kwargs):
         reader = FileOperator()
         file = reader.read(file_path=self.file_path, **self.kwars)
-        return {'file': file}
-
-
-if __name__ == '__main__':
-    step_open_excel = OpenExcelFile(file_path='data/Input.xlsx', header=12)
-    results = step_open_excel.action()
-    summary = results['file'].summary()
-    print(summary)
+        return {"file": file}
