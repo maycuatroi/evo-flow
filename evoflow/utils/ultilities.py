@@ -22,6 +22,10 @@ def download_and_unzip(url: str, des_path: str, proxies_list: dict = None):
     Archive(filename).extractall(des_path)
     os.remove(filename)
 
+def unarchive(file_path: str, des_path: str):
+    pathlib.Path(des_path).mkdir(parents=True, exist_ok=True)
+    Archive(file_path).extractall(des_path)
+
 
 if __name__ == "__main__":
     import os
