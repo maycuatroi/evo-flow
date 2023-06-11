@@ -98,6 +98,7 @@ class Step(BaseObject):
         """
         self.status = self.STATUS_SUCCESS
         self.job.remove_running_step(self)
+        self.job.update_status()
         return self.params
 
     def prepare(self, **kwargs):
@@ -109,6 +110,7 @@ class Step(BaseObject):
         self.params = kwargs
         self.job.add_running_step(self)
         self.status = self.STATUS_RUNNING
+        self.job.update_status()
 
     def __str__(self):
         return self.name

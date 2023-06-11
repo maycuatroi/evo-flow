@@ -70,12 +70,12 @@ class Job(BaseObject):
         ) as live:
             # live.update(Panel(spinners, title="Panel 2"))
 
-            # add
+            self.live_panel = live
             while True:
                 # do self.__run by new thread
                 self.__run(live=live, **kwargs)
 
-    def __run(self, live=None, **kwargs):
+    def __run(self, **kwargs):
         self.compile()
         logger.info(f"Running job: {self.name}")
         self.params_pool = kwargs
@@ -85,8 +85,6 @@ class Job(BaseObject):
             log_string = f"Running step : {step}"
             logger.info(log_string)
             step.prepare(**self.params_pool)
-            if live is not None:
-                self.__update_live(live)
             try:
                 action_params = inspect.getfullargspec(step.action).args
                 build_params = {}
@@ -111,6 +109,7 @@ class Job(BaseObject):
         return last_result
 
     def __init__(self, name=None, start_step: Step = None, **kwargs):
+        self.live_panel = None # for progress monitor
         self.current_step = None
         self.__start_step: Step = start_step
         self.params_pool = {}
@@ -247,7 +246,9 @@ class Job(BaseObject):
     def remove_running_step(self, step):
         self.__running_steps.remove(step)
 
-    def __update_live(self, live):
+    def update_status(self,**kwargs):
+        if self.live_panel is None:
+            return
         tree = Tree(self.name)
         running_steps = self.__running_steps
 
@@ -273,4 +274,4 @@ class Job(BaseObject):
             if step.is_running():
                 tree.add(Spinner("material", text=Text(step.name, style="blue")))
 
-        live.update(Panel(tree, title=f"Running {self.name}"))
+        self.live_panel.update(Panel(tree, title=f"Running {self.name}"))
