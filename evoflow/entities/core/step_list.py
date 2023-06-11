@@ -40,6 +40,24 @@ class StepList(Step):
     def __getitem__(self, item):
         return self.steps[item]
 
+    def prepare(self, **kwargs):
+        """
+        Prepare the step to run
+        """
+
+        for step in self.steps:
+            step.prepare(**kwargs)
+        return super().prepare(**kwargs)
+
+    def end(self, **kwargs) -> dict:
+        """
+        End the step
+        """
+
+        for step in self.steps:
+            step.end(**kwargs)
+        return super().end(**kwargs)
+
     def action(self, **kwargs):
         """
         Performs the function of step
@@ -49,4 +67,14 @@ class StepList(Step):
             list(executor.map(lambda step: step.action(**kwargs), self.steps))
 
     def get_remaining_step(self):
-        return [step for step in self.steps if step.status != Step.STATUS_SUCCESS]
+        return [step for step in self.steps if not step.is_running()]
+
+    @property
+    def job(self):
+        return super().job
+
+    @job.setter
+    def job(self, value):
+        self._job = value
+        for step in self.steps:
+            step.job = value

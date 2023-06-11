@@ -249,17 +249,28 @@ class Job(BaseObject):
 
     def __update_live(self, live):
         tree = Tree(self.name)
-        for step in self.__running_steps:
-            is_step_list = isinstance(step, StepList)
-            if is_step_list:
-                remaining_steps = len(step.get_remaining_step())
-                total_step = len(step.steps)
-                step_title = f"{step.name} {total_step-remaining_steps}/{total_step}"
-            else:
-                step_title = step.name
+        running_steps = self.__running_steps
+
+        tree_added_steps = []
+
+        step_lists = [_ for _ in running_steps if isinstance(_, StepList)]
+        single_steps = [_ for _ in running_steps if not isinstance(_, Step)]
+
+        for step_list in step_lists:
+            remaining_steps = len(step_list.get_remaining_step())
+            total_step = len(step_list.steps)
+            step_title = f"{step_list.name} {total_step-remaining_steps}/{total_step}"
+
             spinner = Spinner("material", text=Text(step_title, style="green"))
             step_live = tree.add(spinner)
-            if isinstance(step, StepList):
-                for sub_step in step.steps:
+            for sub_step in step_list.steps:
+                if sub_step.is_running():
                     step_live.add(Spinner("material", text=Text(sub_step.name, style="blue")))
+                tree_added_steps.append(sub_step)
+        for step in single_steps:
+            if step in tree_added_steps:
+                continue
+            if step.is_running():
+                tree.add(Spinner("material", text=Text(step.name, style="blue")))
+
         live.update(Panel(tree, title=f"Running {self.name}"))

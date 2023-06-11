@@ -70,8 +70,16 @@ class Step(BaseObject):
         self.previous_steps = []
         self.error = None
         self.status = self.STATUS_PENDING
-        self.job = None
+        self._job = None
         super().__init__(name=name, **kwargs)
+
+    @property
+    def job(self):
+        return self._job
+
+    @job.setter
+    def job(self, value):
+        self._job = value
 
     @abc.abstractmethod
     def action(self, **kwargs):
@@ -79,13 +87,6 @@ class Step(BaseObject):
         Performs the function of step
         """
         pass
-
-    def do_action(self, **kwargs):
-        """
-        Performs the function of step
-        """
-
-        return self.action(**kwargs)
 
     def set_error(self, error):
         self.status = self.STATUS_FAILED
@@ -160,3 +161,9 @@ class Step(BaseObject):
                 return False
             self.status = self.STATUS_READY
         return True
+
+    def is_running(self):
+        """
+        Check if step is running
+        """
+        return self.status == self.STATUS_RUNNING
