@@ -8,10 +8,18 @@ class BaseOperator(Step):
         self.name = self.task_id
         self.op_args = op_args or []
         self.__op_kwargs = op_kwargs or {}
+        self.__op_kwargs = {
+            **self.__op_kwargs,
+            **{
+                "ti": self,
+                "task_instance": self,
+            },
+            **kwargs
+        }
 
     @property
     def op_kwargs(self):
-        return {**self.__op_kwargs, **{"ti": self}}
+        return self.__op_kwargs
 
     def __str__(self):
         return f"{self.__class__.__name__} {self.task_id}"
