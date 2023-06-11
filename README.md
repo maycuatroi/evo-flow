@@ -8,7 +8,7 @@ a lite weight RPA and Workflow engine
 ## Install it from PyPI
 
 ```bash
-pip install evoflow
+pip install evodflow
 ```
 
 ## Usage
