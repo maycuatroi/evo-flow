@@ -3,12 +3,22 @@ import inspect
 import json
 import os
 import sys
+import typing
+from time import sleep
 
+from rich.columns import Columns
+from rich.live import Live
+from rich.panel import Panel
+from rich.progress import Progress
+from rich.spinner import Spinner
+from rich.text import Text
+from rich.tree import Tree
 from tqdm import tqdm
 
 from evoflow.controller.log_controller import logger, pretty_dict
 from evoflow.entities.core.base_object import BaseObject
 from evoflow.entities.core.step import Step
+from evoflow.entities.core.step_list import StepList
 from evoflow.entities.core.transaction import Transaction
 
 
@@ -43,23 +53,40 @@ class Job(BaseObject):
     def finish(self, **kwargs):
         logger.info(f"Finish job: {self.name}")
 
-    def __step_generator(self):
+    def __step_generator(self) -> typing.Generator:
         self.stacks = [self.start_step]
         while len(self.stacks) > 0:
-            step_i = self.stacks.pop()
-            self.current_step = step_i
-            yield step_i
+            for i, step in enumerate(self.stacks):
+                if step.is_ready():
+                    self.current_step = step
+                    self.stacks.pop(i)
+                    yield step
+            sleep(0.1)
 
     def run(self, **kwargs):
+        with Live(
+            Panel(Columns([]), title=f"Running {self.name}"),
+            refresh_per_second=20,
+        ) as live:
+            # live.update(Panel(spinners, title="Panel 2"))
+
+            # add
+            while True:
+                # do self.__run by new thread
+                self.__run(live=live, **kwargs)
+
+    def __run(self, live=None, **kwargs):
+        self.compile()
         logger.info(f"Running job: {self.name}")
         self.params_pool = kwargs
         step_generator = self.__step_generator()
 
-        for step in tqdm(step_generator, unit="step"):
-            log_string = f"Running step : {step.name}"
+        for step in step_generator:
+            log_string = f"Running step : {step}"
             logger.info(log_string)
-
             step.prepare(**self.params_pool)
+            if live is not None:
+                self.__update_live(live)
             try:
                 action_params = inspect.getfullargspec(step.action).args
                 build_params = {}
@@ -68,8 +95,9 @@ class Job(BaseObject):
                         continue
                     build_params[param] = step.__dict__.get(param)
                 last_result = step.action(**build_params)
-            except AttributeError:
+            except AttributeError as e:
                 logger.error(f"Current Job params: {pretty_dict(self.params_pool)}")
+                step.set_error(e)
                 raise
             step.end(**kwargs)
 
@@ -84,8 +112,10 @@ class Job(BaseObject):
 
     def __init__(self, name=None, start_step: Step = None, **kwargs):
         self.current_step = None
-        self.__start_step = start_step
+        self.__start_step: Step = start_step
         self.params_pool = {}
+        self.__steps = []
+        self.__running_steps = []
         if name is None:
             name = os.getenv("JOB_NAME")
         super().__init__(name=name, **kwargs)
@@ -198,3 +228,38 @@ class Job(BaseObject):
 
     def __exit__(self, *args, **kwargs):
         self.finish()
+
+    def find_previous_steps(self, step, all_steps):
+        previous_steps = []
+        for step_i in all_steps:
+            if step in step_i.get_next_steps():
+                previous_steps.append(step_i)
+        return previous_steps
+
+    def compile(self):
+        self.__steps = self.get_all_steps()
+        for step in self.__steps:
+            step.job = self
+
+    def add_running_step(self, step):
+        self.__running_steps.append(step)
+
+    def remove_running_step(self, step):
+        self.__running_steps.remove(step)
+
+    def __update_live(self, live):
+        tree = Tree(self.name)
+        for step in self.__running_steps:
+            is_step_list = isinstance(step, StepList)
+            if is_step_list:
+                remaining_steps = len(step.get_remaining_step())
+                total_step = len(step.steps)
+                step_title = f"{step.name} {total_step-remaining_steps}/{total_step}"
+            else:
+                step_title = step.name
+            spinner = Spinner("material", text=Text(step_title, style="green"))
+            step_live = tree.add(spinner)
+            if isinstance(step, StepList):
+                for sub_step in step.steps:
+                    step_live.add(Spinner("material", text=Text(sub_step.name, style="blue")))
+        live.update(Panel(tree, title=f"Running {self.name}"))

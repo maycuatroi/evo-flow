@@ -13,6 +13,13 @@ class Step(BaseObject):
     Step is a cells of jobs
     """
 
+    STATUS_PENDING = "pending"  # waiting to run
+    STATUS_RUNNING = "running"  # running
+    STATUS_SUCCESS = "success"  # success
+    STATUS_FAILED = "failed"  # failed
+    STATUS_SKIPPED = "skipped"  # skipped by condition
+    STATUS_READY = "ready"  # ready to run
+
     def __call__(self, func) -> "Step":
         """
 
@@ -44,8 +51,10 @@ class Step(BaseObject):
     def __init__(self, name=None, transactions=None, **kwargs):
         """
 
-        @param name: Name of the step
-        @param kwargs:
+        Args:
+            name: Name of the step
+            transactions: List of transactions
+            **kwargs:
         """
         self.is_start = kwargs.get("is_start")
         self.is_end = kwargs.get("is_end")
@@ -58,6 +67,10 @@ class Step(BaseObject):
             name = self.__class__.__name__
 
         self.params = {"name": name}
+        self.previous_steps = []
+        self.error = None
+        self.status = self.STATUS_PENDING
+        self.job = None
         super().__init__(name=name, **kwargs)
 
     @abc.abstractmethod
@@ -67,11 +80,24 @@ class Step(BaseObject):
         """
         pass
 
+    def do_action(self, **kwargs):
+        """
+        Performs the function of step
+        """
+
+        return self.action(**kwargs)
+
+    def set_error(self, error):
+        self.status = self.STATUS_FAILED
+        self.error = error
+
     def end(self, **kwargs) -> dict:
         """
         Kết thúc step, kill các object không cần thiết để giải phóng bộ nhớ
         """
-        # Global.caa.start_command('clear history')
+        self.status = self.STATUS_SUCCESS
+        self.job.remove_running_step(self)
+        return self.params
 
     def prepare(self, **kwargs):
         """
@@ -80,6 +106,8 @@ class Step(BaseObject):
         for k, v in kwargs.items():
             setattr(self, k, v)
         self.params = kwargs
+        self.job.add_running_step(self)
+        self.status = self.STATUS_RUNNING
 
     def __str__(self):
         return self.name
@@ -122,3 +150,13 @@ class Step(BaseObject):
             step_list = StepList(other)
             return step_list.next(self)
         raise Exception("Invalid step")
+
+    def is_ready(self):
+        """
+        Check if step is ready to run
+        """
+        for step in self.previous_steps:
+            if step.status != self.STATUS_SUCCESS:
+                return False
+            self.status = self.STATUS_READY
+        return True

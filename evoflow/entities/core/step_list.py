@@ -1,8 +1,5 @@
 import typing
 from concurrent.futures import ThreadPoolExecutor
-
-from tqdm import tqdm
-
 from evoflow.entities.core.step import Step
 
 
@@ -49,10 +46,7 @@ class StepList(Step):
         """
         kwargs = {**self.params, **kwargs}
         with ThreadPoolExecutor(max_workers=10) as executor:
-            list(
-                tqdm(
-                    executor.map(lambda step: step.action(**kwargs), self.steps),
-                    total=len(self.steps),
-                    desc=self.name,
-                )
-            )
+            list(executor.map(lambda step: step.action(**kwargs), self.steps))
+
+    def get_remaining_step(self):
+        return [step for step in self.steps if step.status != Step.STATUS_SUCCESS]

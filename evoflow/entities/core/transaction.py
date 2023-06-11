@@ -11,14 +11,13 @@ class Transaction(BaseObject):
         self.__from_step__ = step
         self.condition = Condition(condition)
         self.__from_step__.transactions.append(self)
+        self.to.previous_steps.append(self.__from_step__)
 
     def validate(self, **kwargs):
         if type(self.condition.condition_function) == str:
             if self.condition.condition_function == "always":
                 return True
-            return self.build_condition_from_string(
-                self.condition.condition_function, self.__from_step__.params
-            )
+            return self.build_condition_from_string(self.condition.condition_function, self.__from_step__.params)
         return bool(self.condition.condition_function(**kwargs))
 
     def build_condition_from_string(self, condition_function_string, params):
