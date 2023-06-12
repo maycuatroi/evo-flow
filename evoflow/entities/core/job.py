@@ -54,7 +54,7 @@ class Job(BaseObject):
         logger.info(f"Finish job: {self.name}")
 
     def __step_generator(self) -> typing.Generator:
-        self.stacks = [self.start_step]
+        self.stacks = self.get_all_steps()
         while len(self.stacks) > 0:
             for i, step in enumerate(self.stacks):
                 if step.is_ready():
@@ -102,14 +102,12 @@ class Job(BaseObject):
             if last_result is not None:
                 self.params_pool = {**self.params_pool, **last_result}
             step.set_all_params(self.params_pool)
-            self.stacks += step.get_next_steps(self.params_pool)
 
         self.finish()
-
         return last_result
 
     def __init__(self, name=None, start_step: Step = None, **kwargs):
-        self.live_panel = None # for progress monitor
+        self.live_panel = None  # for progress monitor
         self.current_step = None
         self.__start_step: Step = start_step
         self.params_pool = {}
@@ -246,7 +244,7 @@ class Job(BaseObject):
     def remove_running_step(self, step):
         self.__running_steps.remove(step)
 
-    def update_status(self,**kwargs):
+    def update_status(self, **kwargs):
         if self.live_panel is None:
             return
         tree = Tree(self.name)
@@ -267,7 +265,7 @@ class Job(BaseObject):
             for sub_step in step_list.steps:
                 if sub_step.is_running():
                     step_live.add(Spinner("material", text=Text(sub_step.name, style="blue")))
-                tree_added_steps.append(sub_step)
+                    tree_added_steps.append(sub_step)
         for step in single_steps:
             if step in tree_added_steps:
                 continue

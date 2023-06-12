@@ -40,23 +40,14 @@ class StepList(Step):
     def __getitem__(self, item):
         return self.steps[item]
 
-    def prepare(self, **kwargs):
+    def action_sub_step(self, step: Step, **kwargs):
         """
-        Prepare the step to run
+        Performs the function of step
         """
-
-        for step in self.steps:
-            step.prepare(**kwargs)
-        return super().prepare(**kwargs)
-
-    def end(self, **kwargs) -> dict:
-        """
-        End the step
-        """
-
-        for step in self.steps:
-            step.end(**kwargs)
-        return super().end(**kwargs)
+        kwargs = {**self.params, **kwargs}
+        step.prepare(**kwargs)
+        step.action(**kwargs)
+        step.end(**kwargs)
 
     def action(self, **kwargs):
         """
@@ -64,7 +55,7 @@ class StepList(Step):
         """
         kwargs = {**self.params, **kwargs}
         with ThreadPoolExecutor(max_workers=10) as executor:
-            list(executor.map(lambda step: step.action(**kwargs), self.steps))
+            list(executor.map(lambda step: self.action_sub_step(step, **kwargs), self.steps))
 
     def get_remaining_step(self):
         return [step for step in self.steps if not step.is_running()]
