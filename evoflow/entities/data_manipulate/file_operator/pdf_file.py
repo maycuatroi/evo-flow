@@ -4,12 +4,14 @@ import os
 import pathlib
 import urllib
 from typing import Iterator
+from urllib.request import URLopener
 
 import cv2
 import numpy as np
+import pdfplumber
 from tqdm import tqdm
 
-import evoflow.Params
+import evoflow.params
 from evoflow import logger
 from evoflow.controller.data_manipulate.image_file_operator import ImageFileOperator
 from evoflow.entities.data_manipulate.file_operator.file import File
@@ -26,11 +28,11 @@ def download_poppler():
 
     poppler_path = f"{os.getenv('userprofile')}/.evoflow/poppler"
     pathlib.Path(poppler_path).mkdir(parents=True, exist_ok=True)
-    poppler_file_name = evoflow.Params.POPPLER_URL.rsplit("/", maxsplit=-1)
-    opener = urllib.request.URLopener()
+    poppler_file_name = evoflow.params.POPPLER_URL.rsplit("/", maxsplit=-1)[-1]
+    opener = URLopener()
     opener.addheader("User-Agent", "evoflow")
     filename, _ = opener.retrieve(
-        evoflow.Params.POPPLER_URL, f"{poppler_path}/{poppler_file_name}"
+        evoflow.params.POPPLER_URL, f"{poppler_path}/{poppler_file_name}"
     )
     Archive(filename).extractall(poppler_path)
     os.remove(filename)
@@ -41,6 +43,11 @@ def download_poppler():
 class PdfFile(File):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.data = pdfplumber.open(self.file_path)
+
+    @property
+    def pages(self):
+        return self.data.pages
 
     def get_texts(self):
         page_count = len(self.data.pages)
@@ -76,7 +83,7 @@ class PdfFile(File):
                     ) from value_error
         else:
             poppler_path = poppler_paths[0]
-
+        poppler_path = os.path.abspath(poppler_path)
         pages = convert_from_path(self.file_path, dpi, poppler_path=poppler_path)
         images = []
         for i, page in tqdm(

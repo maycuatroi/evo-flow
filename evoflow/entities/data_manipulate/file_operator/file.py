@@ -7,6 +7,7 @@ from evoflow.entities.data_manipulate.abstract_data import AbstractData
 class File(AbstractData):
     def __init__(self, file_path: str = None, **args):
         self.file_path = file_path
+        self.file_path = os.path.abspath(self.file_path)
 
         self.file_name = os.path.split(file_path)[1].replace(
             "." + self.get_file_type(), ""

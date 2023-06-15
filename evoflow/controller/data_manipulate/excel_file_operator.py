@@ -2,9 +2,9 @@
 
 import pandas as pd
 
-from evoflow.controller.data_manipulate.FileOperator import FileOperator
-from evoflow.Entities.DataManipulate.FileOperator.DataFrameFile import DataFrameFile
-from evoflow.Entities.DataManipulate.FileOperator.File import File
+from evoflow.controller.data_manipulate.file_operator import FileOperator
+from evoflow.entities.data_manipulate.file_operator.dataframe_file import DataFrameFile
+from evoflow.entities.data_manipulate.file_operator.file import File
 
 
 class ExcelFileOperator(FileOperator):

@@ -1,8 +1,8 @@
 from pptx import Presentation
 
-from evoflow.Controller.DataManipulate.FileOperator import FileOperator
-from evoflow.Entities.DataManipulate.FileOperator.File import File
-from evoflow.Entities.DataManipulate.FileOperator.PPTXFile import PPTXFile
+from evoflow.controller.data_manipulate.file_operator import FileOperator
+from evoflow.entities.data_manipulate.file_operator.file import File
+from evoflow.entities.data_manipulate.file_operator.pptx_file import PPTXFile
 
 
 class PptxFileOperator(FileOperator):

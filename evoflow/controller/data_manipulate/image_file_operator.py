@@ -8,7 +8,7 @@ import numpy as np
 from evoflow import logger
 from evoflow.controller.data_manipulate.file_operator import FileOperator
 from evoflow.entities.data_manipulate.file_operator.file import File
-from evoflow.entities.data_manipulate.file_operator.ImageFile import ImageFile
+from evoflow.entities.data_manipulate.file_operator.image_file import ImageFile
 
 
 def imread(path, flags: int = -1):

@@ -1,11 +1,9 @@
-#  Copyright (c) 2021. Copyright belongs to evoflow team
-
 import abc
 
 from tqdm import tqdm
 
-from evoflow.Controller.DataManipulate.DataManipulate import DataManipulate
-from evoflow.Entities.DataManipulate.FileOperator.File import File
+from evoflow.controller.data_manipulate.data_manipulate import DataManipulate
+from evoflow.entities.data_manipulate.file_operator.file import File
 
 
 def get_reader(file_type):

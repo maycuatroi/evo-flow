@@ -5,9 +5,9 @@ import PIL
 from PIL import Image, ImageDraw, ImageFont
 
 from evoflow.entities.data_manipulate.file_operator.file import File
-from evoflow.entities.Global import Global
-from evoflow.Services.OCR.EasyOCREngine import EasyOCREngine
-from evoflow.Services.OCR.Result import OCRResult
+from evoflow.entities.global_vars import Global
+from evoflow.services.ocr.easy_ocr_engine import EasyOCREngine
+from evoflow.services.ocr.result import OCRResult
 
 
 class ImageFile(File):
@@ -41,6 +41,11 @@ class ImageFile(File):
     def to_pil(self):
         return PIL.Image.fromarray(self.data)
 
+    def __array__(self):
+        """
+        Convert to numpy array: np.array(image_file)
+        """
+        return self.data
     def draw(self, ocr_results):
         user_path = f'{os.getenv("userprofile")}/.evoflow/fonts/Noto_Sans_JP/NotoSansJP-Regular.otf'
         data_path = "./data/.evoflow/fonts/Noto_Sans_JP/NotoSansJP-Regular.otf"

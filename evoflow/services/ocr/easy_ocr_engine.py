@@ -8,7 +8,7 @@ from urllib.error import URLError
 import numpy as np
 
 from evoflow import logger
-from evoflow.Services.ocr.result import OCRResult
+from evoflow.services.ocr.result import OCRResult
 
 try:
     import easyocr
