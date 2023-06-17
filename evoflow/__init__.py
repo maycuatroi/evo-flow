@@ -33,7 +33,7 @@ def init_setting():
             os.environ[key] = str(value)
     except Exception as e:
         logger.debug(e)
-        logger.info("Can't import setting.py")
+        logger.debug("Can't import setting.py")
 
 
 def versioning(version_module):
@@ -65,7 +65,7 @@ def bot_versioning():
 
         versioning(version)
     except:
-        logger.error("Can't versioning For Bot")
+        logger.debug("Can't versioning For Bot")
 
 
 init_setting()

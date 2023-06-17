@@ -13,7 +13,7 @@ from evoflow.services.ocr.result import OCRResult
 try:
     import easyocr
 except ImportError:
-    logger.error("Can't import easyocr. Try to install with: pip install easyocr")
+    logger.debug("Can't import easyocr. Try to install with: pip install easyocr")
 
 MODEL_PATH = "/ocr"
 
