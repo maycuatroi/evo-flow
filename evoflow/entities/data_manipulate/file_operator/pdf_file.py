@@ -112,3 +112,6 @@ class PdfFile(File):
 
             full_image.data = np.concatenate([mat1, mat2], axis=0)
         return full_image
+
+    def close(self):
+        self.data.close()
