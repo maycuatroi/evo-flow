@@ -28,7 +28,7 @@ class BaseOperator(Step):
         return f"{self.__class__.__name__} {self.task_id}"
 
     def xcom_push(self, key, value):
-        self.params[key] = value
+        self.job.params_pool[key] = value
 
     def xcom_pull(self, key, **kwargs):
-        return self.params[key]
+        return self.job.params_pool[key]
