@@ -9,11 +9,9 @@ from time import sleep
 from rich.columns import Columns
 from rich.live import Live
 from rich.panel import Panel
-from rich.progress import Progress
 from rich.spinner import Spinner
 from rich.text import Text
 from rich.tree import Tree
-from tqdm import tqdm
 
 from evoflow.controller.log_controller import logger, pretty_dict
 from evoflow.entities.core.base_object import BaseObject
@@ -51,6 +49,7 @@ class Job(BaseObject):
         pass
 
     def finish(self, **kwargs):
+        self.is_done = True
         logger.info(f"Finish job: {self.name}")
 
     def __step_generator(self) -> typing.Generator:
@@ -74,6 +73,8 @@ class Job(BaseObject):
             while True:
                 # do self.__run by new thread
                 self.__run(live=live, **kwargs)
+                if self.is_done:
+                    break
 
     def __run(self, **kwargs):
         self.compile()
@@ -106,11 +107,11 @@ class Job(BaseObject):
         self.finish()
         return last_result
 
-    def __init__(self, name=None, start_step: Step = None, **kwargs):
+    def __init__(self, name=None, start_step: Step = None,default_params=None, **kwargs):
         self.live_panel = None  # for progress monitor
         self.current_step = None
         self.__start_step: Step = start_step
-        self.params_pool = {}
+        self.params_pool = default_params or {}
         self.__steps = []
         self.__running_steps = []
         if name is None:
@@ -264,7 +265,9 @@ class Job(BaseObject):
             step_live = tree.add(spinner)
             for sub_step in step_list.steps:
                 if sub_step.is_running():
-                    step_live.add(Spinner("material", text=Text(sub_step.name, style="blue")))
+                    step_live.add(
+                        Spinner("material", text=Text(sub_step.name, style="blue"))
+                    )
                     tree_added_steps.append(sub_step)
         for step in single_steps:
             if step in tree_added_steps:

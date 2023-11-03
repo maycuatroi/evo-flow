@@ -108,9 +108,10 @@ class Step(BaseObject):
         for k, v in kwargs.items():
             setattr(self, k, v)
         self.params = kwargs
-        self.job.add_running_step(self)
-        self.status = self.STATUS_RUNNING
-        self.job.update_status()
+        if self.job:
+            self.job.add_running_step(self)
+            self.status = self.STATUS_RUNNING
+            self.job.update_status()
 
     def __str__(self):
         return self.name
