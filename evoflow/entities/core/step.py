@@ -64,7 +64,11 @@ class Step(BaseObject):
             self.transactions = transactions
 
         if name is None:
-            name = self.__class__.__name__
+            action = kwargs.get("action")
+            if action is not None:
+                name = action.__name__
+            else:
+                name = self.__class__.__name__
 
         self.params = {"name": name}
         self.previous_steps = []

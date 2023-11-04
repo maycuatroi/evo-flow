@@ -79,7 +79,7 @@ class Job(BaseObject):
     def __run(self, **kwargs):
         self.compile()
         logger.info(f"Running job: {self.name}")
-        self.params_pool = kwargs
+        self.params_pool = {**self.params_pool, **kwargs}
         step_generator = self.__step_generator()
 
         for step in step_generator:
