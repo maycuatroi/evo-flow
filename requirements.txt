@@ -7,3 +7,5 @@ openpyxl
 coloredlogs
 pyunpack
 patool
+GitPython
+opencv-python
